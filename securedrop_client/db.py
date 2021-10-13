@@ -57,6 +57,7 @@ class Source(Base):
     interaction_count = Column(Integer, server_default=text("0"), nullable=False)
     is_starred = Column(Boolean(name="is_starred"), server_default=text("0"))
     last_updated = Column(DateTime)
+    deleted = Column(Boolean(name="deleted"), nullable=False, server_default=text("0"))
 
     def __repr__(self) -> str:
         return "<Source {}: {}>".format(self.uuid, self.journalist_designation)
@@ -120,6 +121,7 @@ class Message(Base):
     file_counter = Column(Integer, nullable=False)
     size = Column(Integer, nullable=False)
     download_url = Column(String(255), nullable=False)
+    deleted = Column(Boolean(name="deleted"), nullable=False, server_default=text("0"))
 
     # This is whether the submission has been downloaded in the local database.
     is_downloaded = Column(Boolean(name="is_downloaded"), nullable=False, server_default=text("0"))
@@ -243,6 +245,7 @@ class File(Base):
         nullable=True,
     )
 
+    deleted = Column(Boolean(name="deleted"), nullable=False, server_default=text("0"))
     download_error_id = Column(Integer, ForeignKey("downloaderrors.id"))
     download_error = relationship("DownloadError")
 
@@ -361,6 +364,7 @@ class Reply(Base):
         nullable=True,
     )
 
+    deleted = Column(Boolean(name="deleted"), nullable=False, server_default=text("0"))
     download_error_id = Column(Integer, ForeignKey("downloaderrors.id"))
     download_error = relationship("DownloadError")
 

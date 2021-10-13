@@ -861,6 +861,9 @@ class SourceList(QListWidget):
         sources_to_add = {}
         for source in sources:
             try:
+                if source.deleted:
+                    continue
+
                 if source.uuid in self.source_items:
                     sources_to_update.append(source.uuid)
                 else:
@@ -3493,6 +3496,9 @@ class ConversationView(QWidget):
         current_conversation = self.current_messages.copy()
 
         for index, conversation_item in enumerate(collection):
+            if conversation_item.deleted:
+                continue
+
             item_widget = current_conversation.get(conversation_item.uuid)
             if item_widget:
                 current_conversation.pop(conversation_item.uuid)

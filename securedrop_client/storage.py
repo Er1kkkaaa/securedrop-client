@@ -649,6 +649,27 @@ def find_new_replies(session: Session) -> List[Reply]:
     return q.all()
 
 
+def mark_source_as_deleted(uuid: str, session: Session) -> None:
+    """
+    Mark Source as deleted.
+    """
+    db_obj = session.query(Source).filter_by(uuid=uuid).one()
+    db_obj.deleted = True
+    session.add(db_obj)
+    session.commit()
+
+
+def mark_source_conversation_as_deleted(source_uuid: str, session: Session) -> None:
+    """
+    Mark Source collection as deleted.
+    """
+    source_db_obj = session.query(Source).filter_by(uuid=source_uuid).one()
+    for i in source_db_obj.collection:
+        i.deleted = True
+        session.add(i)
+    session.commit()
+
+
 def mark_as_not_downloaded(uuid: str, session: Session) -> None:
     """
     Mark File as not downloaded in the database.

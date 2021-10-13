@@ -994,7 +994,12 @@ class Controller(QObject):
             self.gui.update_error_status(_("The file download failed. Please try again."))
 
     def on_delete_conversation_success(self, uuid: str) -> None:
+        """
+        Rely on background sync to delete the conversation locally.
+        """
         logger.info("Conversation %s successfully deleted at server", uuid)
+        self.api_sync.sync()
+        storage.mark_source_conversation_as_deleted(uuid, self.session)
         self.api_sync.sync()
 
     def on_delete_conversation_failure(self, e: Exception) -> None:
@@ -1006,9 +1011,10 @@ class Controller(QObject):
 
     def on_delete_source_success(self, source_uuid: str) -> None:
         """
-        Rely on sync to delete the source locally so we know for sure it was deleted
+        Rely on background sync to delete the source locally.
         """
         logger.info("Source %s successfully deleted at server", source_uuid)
+        storage.mark_source_as_deleted(source_uuid, self.session)
         self.api_sync.sync()
 
     def on_delete_source_failure(self, e: Exception) -> None:
