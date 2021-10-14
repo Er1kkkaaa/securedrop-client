@@ -656,12 +656,6 @@ class MainView(QWidget):
             logger.debug(e)
 
     def refresh_source_conversations(self) -> None:
-        deleting_conversations = [
-            c for c in self.source_conversations.values() if c.deleting_conversation
-        ]
-        for conversation_wrapper in deleting_conversations:
-            conversation_wrapper.end_conversation_deletion()
-
         source = self.source_list.get_selected_source()
         if not source:
             return
@@ -1177,6 +1171,7 @@ class SourceWidget(QWidget):
         self.controller = controller
         self.controller.conversation_deleted.connect(self._on_conversation_deleted)
         self.controller.conversation_deletion_failed.connect(self._on_conversation_deletion_failed)
+        self.controller.conversation_deletion_successful.connect(self._on_conversation_deletion_successful)
         self.controller.source_deleted.connect(self._on_source_deleted)
         self.controller.source_deletion_failed.connect(self._on_source_deletion_failed)
         self.controller.authentication_state.connect(self._on_authentication_changed)
@@ -1378,6 +1373,11 @@ class SourceWidget(QWidget):
             self.start_conversation_deletion()
 
     @pyqtSlot(str)
+    def _on_conversation_deletion_successful(self, source_uuid: str) -> None:
+        if self.source_uuid == source_uuid:
+            self.end_conversation_deletion()
+
+    @pyqtSlot(str)
     def _on_conversation_deletion_failed(self, source_uuid: str) -> None:
         if self.source_uuid == source_uuid:
             self.end_conversation_deletion()
@@ -1402,7 +1402,6 @@ class SourceWidget(QWidget):
 
     def end_conversation_deletion(self) -> None:
         self.end_deletion()
-        self.deleting_conversation = False
 
     def end_deletion(self) -> None:
         self.deletion_indicator.stop()
@@ -1420,8 +1419,12 @@ class SourceWidget(QWidget):
         self.star.hide()
         self.update_styles()
 
+<<<<<<< HEAD
     def start_conversation_deletion(self) -> None:
         self.deleting_conversation = True
+=======
+    def start_conversation_deletion(self):
+>>>>>>> delete conversation from the gui as soon as request is successful
         self.start_deletion()
 
     def start_deletion(self) -> None:
@@ -3678,7 +3681,6 @@ class SourceConversationWrapper(QWidget):
     """
 
     deleting_account = False
-    deleting_conversation = False
 
     def __init__(self, source: Source, controller: Controller) -> None:
         super().__init__()
@@ -3689,6 +3691,7 @@ class SourceConversationWrapper(QWidget):
         self.source_uuid = source.uuid
         controller.conversation_deleted.connect(self.on_conversation_deleted)
         controller.conversation_deletion_failed.connect(self.on_conversation_deletion_failed)
+        controller.conversation_deletion_successful.connect(self.on_conversation_deletion_successful)
         controller.source_deleted.connect(self.on_source_deleted)
         controller.source_deletion_failed.connect(self.on_source_deletion_failed)
 
@@ -3728,6 +3731,12 @@ class SourceConversationWrapper(QWidget):
         if self.source_uuid == source_uuid:
             self.end_conversation_deletion()
 
+    @pyqtSlot(str)
+    def on_conversation_deletion_successful(self, source_uuid: str):
+        if self.source_uuid == source_uuid:
+            self.conversation_view.update_conversation(self.source.collection)
+            self.end_conversation_deletion()
+
     @pyqtSlot()
     def on_conversation_updated(self) -> None:
         self.conversation_title_bar.update_timestamp()
@@ -3744,7 +3753,6 @@ class SourceConversationWrapper(QWidget):
 
     def start_conversation_deletion(self) -> None:
         self.reply_box.setProperty("class", "deleting_conversation")
-        self.deleting_conversation = True
         self.start_deletion()
         self.conversation_deletion_indicator.start()
         self.deletion_indicator.stop()
@@ -3776,8 +3784,12 @@ class SourceConversationWrapper(QWidget):
         self.conversation_title_bar.setDisabled(True)
         self.conversation_view.hide()
 
+<<<<<<< HEAD
     def end_conversation_deletion(self) -> None:
         self.deleting_conversation = False
+=======
+    def end_conversation_deletion(self):
+>>>>>>> delete conversation from the gui as soon as request is successful
         self.end_deletion()
 
     def end_account_deletion(self) -> None:

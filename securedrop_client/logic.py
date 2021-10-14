@@ -255,6 +255,14 @@ class Controller(QObject):
     conversation_deletion_failed = pyqtSignal(str)
 
     """
+    Indicates that a source conversation content deletion attempt successful at the server.
+
+    Emits:
+        str: the source UUID
+    """
+    conversation_deletion_successful = pyqtSignal(str)
+
+    """
     This signal indicates that a star update request succeeded.
 
     Emits:
@@ -998,9 +1006,8 @@ class Controller(QObject):
         Rely on background sync to delete the conversation locally.
         """
         logger.info("Conversation %s successfully deleted at server", uuid)
-        self.api_sync.sync()
         storage.mark_source_conversation_as_deleted(uuid, self.session)
-        self.api_sync.sync()
+        self.conversation_deletion_successful.emit(uuid)
 
     def on_delete_conversation_failure(self, e: Exception) -> None:
         if isinstance(e, DeleteConversationJobException):
