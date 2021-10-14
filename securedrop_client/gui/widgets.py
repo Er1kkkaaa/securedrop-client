@@ -1419,12 +1419,7 @@ class SourceWidget(QWidget):
         self.star.hide()
         self.update_styles()
 
-<<<<<<< HEAD
     def start_conversation_deletion(self) -> None:
-        self.deleting_conversation = True
-=======
-    def start_conversation_deletion(self):
->>>>>>> delete conversation from the gui as soon as request is successful
         self.start_deletion()
 
     def start_deletion(self) -> None:
@@ -3680,8 +3675,6 @@ class SourceConversationWrapper(QWidget):
     per-source resources.
     """
 
-    deleting_account = False
-
     def __init__(self, source: Source, controller: Controller) -> None:
         super().__init__()
 
@@ -3759,7 +3752,6 @@ class SourceConversationWrapper(QWidget):
 
     def start_account_deletion(self) -> None:
         self.reply_box.setProperty("class", "deleting")
-        self.deleting_account = True
         self.reply_box.text_edit.setText("")
         self.start_deletion()
 
@@ -3784,16 +3776,10 @@ class SourceConversationWrapper(QWidget):
         self.conversation_title_bar.setDisabled(True)
         self.conversation_view.hide()
 
-<<<<<<< HEAD
     def end_conversation_deletion(self) -> None:
-        self.deleting_conversation = False
-=======
-    def end_conversation_deletion(self):
->>>>>>> delete conversation from the gui as soon as request is successful
         self.end_deletion()
 
     def end_account_deletion(self) -> None:
-        self.deleting_account = False
         self.end_deletion()
 
     def end_deletion(self) -> None:
