@@ -482,6 +482,8 @@ class DraftReply(Base):
     send_status_id = Column(Integer, ForeignKey("replysendstatuses.id"))
     send_status = relationship("ReplySendStatus")
 
+    deletion_scheduled = Column(Boolean(name="deletion_scheduled"), nullable=False, server_default=text("0"))
+
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
 
