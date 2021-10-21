@@ -121,7 +121,7 @@ class Message(Base):
     file_counter = Column(Integer, nullable=False)
     size = Column(Integer, nullable=False)
     download_url = Column(String(255), nullable=False)
-    deleted = Column(Boolean(name="deleted"), nullable=False, server_default=text("0"))
+    deletion_scheduled = Column(Boolean(name="deletion_scheduled"), nullable=False, server_default=text("0"))
 
     # This is whether the submission has been downloaded in the local database.
     is_downloaded = Column(Boolean(name="is_downloaded"), nullable=False, server_default=text("0"))
@@ -245,7 +245,7 @@ class File(Base):
         nullable=True,
     )
 
-    deleted = Column(Boolean(name="deleted"), nullable=False, server_default=text("0"))
+    deletion_scheduled = Column(Boolean(name="deletion_scheduled"), nullable=False, server_default=text("0"))
     download_error_id = Column(Integer, ForeignKey("downloaderrors.id"))
     download_error = relationship("DownloadError")
 
@@ -364,7 +364,7 @@ class Reply(Base):
         nullable=True,
     )
 
-    deleted = Column(Boolean(name="deleted"), nullable=False, server_default=text("0"))
+    deletion_scheduled = Column(Boolean(name="deletion_scheduled"), nullable=False, server_default=text("0"))
     download_error_id = Column(Integer, ForeignKey("downloaderrors.id"))
     download_error = relationship("DownloadError")
 

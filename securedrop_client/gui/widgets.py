@@ -855,7 +855,7 @@ class SourceList(QListWidget):
         sources_to_add = {}
         for source in sources:
             try:
-                if source.deleted:
+                if source.deletion_scheduled:
                     continue
 
                 if source.uuid in self.source_items:
@@ -3494,7 +3494,7 @@ class ConversationView(QWidget):
         current_conversation = self.current_messages.copy()
 
         for index, conversation_item in enumerate(collection):
-            if conversation_item.deleted:
+            if conversation_item.deletion_scheduled:
                 continue
 
             item_widget = current_conversation.get(conversation_item.uuid)
